@@ -1,15 +1,28 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabaseClient"; // adjust path if needed
 import Sidebar from "../components/Sidebar";
 import ProfileContent from "../components/ProfileContent";
-import { useState, Suspense } from "react";
 
-function DashboardContent() {
-  const searchParams = useSearchParams();
-  const name = searchParams.get("name") || "User";
-
+export default function DashboardPage() {
+  const [name, setName] = useState("User");
   const [activePage, setActivePage] = useState<"home" | "profile">("home");
+
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        // Use full_name if available, else fallback to email, else "User"
+        setName(user.user_metadata?.full_name || user.email || "User");
+      }
+    };
+
+    getUser();
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-gray-100 text-black">
@@ -28,13 +41,5 @@ function DashboardContent() {
         {activePage === "profile" && <ProfileContent />}
       </div>
     </div>
-  );
-}
-
-export default function DashboardPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <DashboardContent />
-    </Suspense>
   );
 }
