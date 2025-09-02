@@ -3,9 +3,9 @@
 import { useSearchParams } from "next/navigation";
 import Sidebar from "../components/Sidebar";
 import ProfileContent from "../components/ProfileContent";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 
-export default function DashboardPage() {
+function DashboardContent() {
   const searchParams = useSearchParams();
   const name = searchParams.get("name") || "User";
 
@@ -28,5 +28,13 @@ export default function DashboardPage() {
         {activePage === "profile" && <ProfileContent />}
       </div>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }
