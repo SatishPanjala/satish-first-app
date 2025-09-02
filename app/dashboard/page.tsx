@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabaseClient"; // adjust path if needed
+import { supabase } from "../../lib/supabaseClient"; // adjust path if needed
 import Sidebar from "../components/Sidebar";
 import ProfileContent from "../components/ProfileContent";
 
